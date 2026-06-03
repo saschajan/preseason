@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<!-- saved from url=(0079)file:///Users/saschajanborn/Downloads/TSV-Marbach-Vorbereitung_WebApp_v1_2.html -->
+<html lang="de"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0e0f0d">
+<title>TSV Marbach · Vor-Vorbereitung</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="./TSV Marbach · Vor-Vorbereitung_files/css2" rel="stylesheet">
+<style>
+:root{
+  --ink:#101109; --paper:#f3f1e7; --paper2:#e9e6d8; --line:#cfccba;
+  --grass:#1f7d3a; --grass-d:#15592a; --grass-l:#37a653; --grass-glow:#bfe6c8;
+  --chalk:#ffffff; --muted:#6f6d5e; --danger:#b23b2e;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  font-family:'Archivo',sans-serif;background:var(--ink);color:var(--paper);
+  font-size:16px;line-height:1.5;overscroll-behavior:none;
+}
+#app{max-width:520px;margin:0 auto;min-height:100dvh;position:relative;background:var(--ink)}
+.mono{font-family:'Space Mono',monospace}
+.display{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;letter-spacing:.01em;line-height:.95}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit;font-size:16px}
+.hidden{display:none!important}
+
+/* ===== pitch texture helpers ===== */
+.pitch{background:
+  repeating-linear-gradient(0deg,var(--grass) 0 28px,var(--grass-d) 28px 56px);
+}
+.chalk-top{border-top:3px solid var(--chalk)}
+.grain::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:.06;
+  background-image:radial-gradient(var(--chalk) .5px,transparent .5px);background-size:4px 4px}
+
+/* ===== AUTH ===== */
+#auth{min-height:100dvh;display:flex;flex-direction:column}
+.auth-hero{position:relative;overflow:hidden;padding:46px 26px 30px;
+  background:var(--grass-d);border-bottom:3px solid var(--chalk)}
+.auth-hero .stripes{position:absolute;inset:0;opacity:.5;
+  background:repeating-linear-gradient(0deg,transparent 0 26px,rgba(0,0,0,.18) 26px 52px)}
+.crest{position:relative;display:inline-flex;align-items:center;gap:14px;margin-bottom:18px}
+.crest .badge{width:74px;height:74px;flex:none;background:var(--chalk);border:3px solid var(--ink);
+  box-shadow:5px 5px 0 rgba(0,0,0,.35);display:flex;align-items:center;justify-content:center;padding:6px}
+.crest .badge img{width:100%;height:100%;object-fit:contain;display:block}
+.crest .club{font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--grass-glow);font-weight:700;line-height:1.5}
+.crest .club b{display:block;color:var(--chalk);font-family:'Anton';font-size:22px;letter-spacing:.04em}
+.auth-hero h1{position:relative;font-size:46px;color:var(--chalk);text-shadow:3px 3px 0 var(--ink)}
+.auth-hero p{position:relative;margin-top:10px;color:var(--grass-glow);font-size:13.5px;max-width:30ch}
+.auth-body{flex:1;padding:26px 24px 40px;background:var(--paper);color:var(--ink);position:relative}
+.seg{display:flex;background:var(--paper2);border:2px solid var(--ink);border-radius:0;margin-bottom:22px}
+.seg button{flex:1;padding:11px;font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.06em;color:var(--ink)}
+.seg button.on{background:var(--ink);color:var(--paper)}
+.field{margin-bottom:15px}
+.field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:5px}
+.field input{width:100%;padding:13px 14px;border:2px solid var(--ink);background:var(--chalk);color:var(--ink);border-radius:0;font-weight:500}
+.field input:focus{outline:none;box-shadow:inset 0 0 0 2px var(--grass)}
+.btn-primary{width:100%;margin-top:8px;padding:15px;background:var(--grass);color:var(--chalk);font-family:'Anton';font-size:20px;text-transform:uppercase;letter-spacing:.03em;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);transition:transform .06s,box-shadow .06s}
+.btn-primary:active{transform:translate(4px,4px);box-shadow:0 0 0 var(--ink)}
+.err{color:var(--danger);font-size:13px;font-weight:600;margin-top:12px;min-height:18px}
+.auth-foot{font-size:11px;color:var(--muted);margin-top:18px;line-height:1.5}
+
+/* ===== APP SHELL ===== */
+#main{display:none;flex-direction:column;min-height:100dvh;padding-bottom:74px}
+.topbar{position:sticky;top:0;z-index:30;background:var(--ink);border-bottom:3px solid var(--grass);
+  display:flex;align-items:center;justify-content:space-between;padding:14px 18px}
+.topbar .who{display:flex;align-items:center;gap:10px;min-width:0}
+.topbar .num{font-family:'Anton';font-size:26px;color:var(--grass-l);background:var(--ink);border:2px solid var(--grass);
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;flex:none}
+.topbar .who b{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.topbar .who small{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}
+.view{padding:18px 16px 8px}
+
+/* progress banner */
+.banner{position:relative;overflow:hidden;border:3px solid var(--chalk);margin-bottom:20px}
+.banner .pitch{padding:18px 18px 16px}
+.banner .row{display:flex;justify-content:space-between;align-items:flex-end;color:var(--chalk);position:relative;z-index:2}
+.banner .lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;opacity:.9}
+.banner .big{font-family:'Anton';font-size:54px;line-height:.85;text-shadow:2px 2px 0 rgba(0,0,0,.4)}
+.banner .big span{font-size:24px;opacity:.8}
+.bar{height:14px;background:rgba(0,0,0,.35);border:2px solid var(--chalk);margin-top:14px;position:relative;z-index:2}
+.bar i{display:block;height:100%;background:var(--chalk);width:0;transition:width .5s cubic-bezier(.2,.8,.2,1)}
+.bannerfoot{background:var(--ink);color:var(--paper);display:flex;justify-content:space-between;padding:9px 16px;font-size:12px}
+.bannerfoot b{color:var(--grass-l);text-transform:uppercase;letter-spacing:.06em}
+
+/* plan/level pills */
+.section-h{font-family:'Anton';font-size:13px;letter-spacing:.14em;color:var(--grass-l);text-transform:uppercase;margin:6px 2px 11px;display:flex;align-items:center;gap:8px}
+.section-h::before{content:"";width:14px;height:14px;background:var(--grass);display:inline-block;transform:rotate(45deg)}
+.choosebar{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.chip{padding:8px 12px;border:2px solid var(--paper2);background:transparent;color:var(--paper);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.chip.on{background:var(--grass);color:var(--chalk);border-color:var(--grass)}
+.chip small{display:block;font-weight:400;font-size:10px;color:inherit;opacity:.85;letter-spacing:0;text-transform:none}
+
+/* phase label */
+.phase{display:flex;align-items:center;gap:10px;margin:22px 2px 12px;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted)}
+.phase b{color:var(--paper);font-weight:700}
+.phase .ln{flex:1;height:2px;background:var(--line);opacity:.3}
+
+/* day grid */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.day{position:relative;border:2px solid #2a2c24;background:#181a14;padding:9px 8px 8px;min-height:74px;
+  display:flex;flex-direction:column;justify-content:space-between;text-align:left;transition:transform .08s}
+.day:active{transform:scale(.96)}
+.day .dn{font-family:'Space Mono';font-size:11px;color:var(--muted)}
+.day .dt{font-size:11.5px;font-weight:700;line-height:1.15;text-transform:uppercase;letter-spacing:.01em}
+.day .ic{position:absolute;top:7px;right:7px;font-size:11px;font-weight:700}
+.day.lauf{border-color:var(--grass);background:#13311d}.day.lauf .dt{color:var(--grass-glow)}
+.day.kraft{border-color:#5b5e4d;background:#26281f}.day.kraft .dt{color:var(--paper)}
+.day.aktiv{border-color:#2f8f6a;background:#143028}.day.aktiv .dt{color:#9fe1cb}
+.day.pause{border-color:#2a2c24;background:#141511}.day.pause .dt{color:var(--muted)}
+.day.done{background:var(--grass);border-color:var(--chalk)}
+.day.done .dt,.day.done .dn{color:var(--chalk)}
+.day.done .ic{color:var(--chalk)}
+.day.next{box-shadow:0 0 0 2px var(--grass-l),0 0 14px rgba(76,166,83,.5)}
+.day.next::after{content:"NÄCHSTE";position:absolute;bottom:-2px;right:-2px;background:var(--grass-l);color:var(--ink);font-size:8px;font-weight:700;padding:1px 4px;letter-spacing:.08em}
+
+/* exercises */
+.ex{border:2px solid #2a2c24;background:#16180f;margin-bottom:12px}
+.ex .h{display:flex;align-items:center;gap:12px;padding:13px 14px;border-bottom:2px solid #2a2c24}
+.ex .badge{font-family:'Anton';font-size:22px;width:38px;height:38px;flex:none;background:var(--grass);color:var(--chalk);display:flex;align-items:center;justify-content:center;border:2px solid var(--chalk)}
+.ex .h b{font-size:15px;display:block}
+.ex .h small{font-size:11px;color:var(--grass-l);text-transform:uppercase;letter-spacing:.06em}
+.ex .body{padding:12px 14px;font-size:13.5px}
+.ex .body p{margin-bottom:8px}
+.ex .body .k{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);display:block;margin-bottom:2px}
+.ex .body .bad{color:#e6a39a}
+.ex .gl{display:inline-flex;align-items:center;gap:6px;margin-top:6px;font-size:12px;font-weight:700;color:var(--grass-l);text-transform:uppercase;letter-spacing:.05em;border-bottom:2px solid var(--grass)}
+
+/* profile */
+.card{border:2px solid #2a2c24;background:#16180f;padding:16px;margin-bottom:14px}
+.card h3{font-family:'Anton';font-size:15px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px;color:var(--grass-l)}
+.card .field input,.card .field select{background:#0f110b;color:var(--paper);border-color:#3a3d30}
+.card .field label{color:var(--muted)}
+.kv{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid #24261e;font-size:14px}
+.kv:last-child{border:none}.kv b{color:var(--muted);font-weight:600;text-transform:uppercase;font-size:11px;letter-spacing:.08em}
+.btn-line{width:100%;padding:12px;border:2px solid #3a3d30;background:transparent;color:var(--paper);font-weight:700;text-transform:uppercase;font-size:13px;letter-spacing:.06em;margin-top:6px}
+.btn-line.warn{border-color:var(--danger);color:#e6a39a}
+.btn-save{width:100%;padding:13px;background:var(--grass);color:var(--chalk);font-family:'Anton';font-size:17px;text-transform:uppercase;letter-spacing:.04em;border:2px solid var(--chalk);box-shadow:3px 3px 0 var(--ink)}
+.note-soft{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5}
+
+/* bottom nav */
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:520px;
+  background:var(--ink);border-top:3px solid var(--grass);display:flex;z-index:40}
+.nav button{flex:1;padding:11px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:3px;
+  font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.nav button .ico{font-family:'Anton';font-size:19px;line-height:1}
+.nav button.on{color:var(--grass-l)}
+.nav button.on .ico{color:var(--grass-l)}
+
+/* modal */
+.modal{position:fixed;inset:0;z-index:60;display:none;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.7)}
+.modal.show{display:flex}
+.sheet{width:100%;max-width:520px;background:var(--paper);color:var(--ink);border-top:4px solid var(--grass);
+  padding:22px 20px calc(26px + env(safe-area-inset-bottom));animation:up .25s cubic-bezier(.2,.8,.2,1)}
+@keyframes up{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.sheet .tag{display:inline-block;font-family:'Space Mono';font-size:12px;font-weight:700;background:var(--ink);color:var(--paper);padding:3px 9px;margin-bottom:10px}
+.sheet h2{font-family:'Anton';font-size:30px;text-transform:uppercase;line-height:.95;margin-bottom:4px}
+.sheet .meta{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700;margin-bottom:16px}
+.sheet .work{font-size:18px;font-weight:600;line-height:1.4;border-left:4px solid var(--grass);padding-left:13px;margin-bottom:14px}
+.sheet .hint{font-size:13px;color:var(--muted);background:var(--paper2);padding:11px 13px;margin-bottom:18px}
+.sheet .hint b{color:var(--grass-d);text-transform:uppercase;font-size:10px;letter-spacing:.12em;display:block;margin-bottom:3px}
+.sheet .acts{display:flex;gap:10px}
+.sheet .check{flex:1;padding:15px;font-family:'Anton';font-size:19px;text-transform:uppercase;letter-spacing:.03em;
+  background:var(--grass);color:var(--chalk);border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink)}
+.sheet .check.undo{background:var(--paper2);color:var(--ink)}
+.sheet .close{padding:15px 18px;border:2px solid var(--ink);background:transparent;font-weight:700;text-transform:uppercase;font-size:13px}
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--chalk);
+  border:2px solid var(--grass);padding:11px 18px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.04em;
+  z-index:80;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body style="overscroll-behavior-x: auto;">
+<div id="app">
+
+  <!-- ===================== AUTH ===================== -->
+  <section id="auth" class="">
+    <div class="auth-hero grain">
+      <div class="stripes"></div>
+      <div class="crest"><span class="badge"><img src="data:image/png;base64,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" alt="TSV Marbach Wappen"></span><span class="club">Saison-Vorbereitung<b>TSV Marbach</b></span></div>
+      <h1 class="display">Vor-<br>Vorbereitung</h1>
+      <p>32 Tage. Drei Pläne. Ein Ziel: fit in die Saison-Vorbereitung.</p>
+    </div>
+    <div class="auth-body">
+      <div class="field"><label>Benutzername</label><input id="li-user" autocomplete="username" placeholder="z. B. tommy10"></div>
+      <div class="field"><label>Team-PIN</label><input id="li-pin" type="password" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="••••"></div>
+      <button class="btn-primary" onclick="doLogin()">Aufs Feld</button>
+
+      <div class="err" id="auth-err"></div>
+      <p class="auth-foot">Such dir einen Benutzernamen aus und gib die <b>Team-PIN</b> ein, die du vom Trainer bekommen hast. Neuer Name = neues Profil. Dein Fortschritt wird nur auf <b>diesem Gerät</b> gespeichert — nutze immer dasselbe Handy/denselben Browser, dann bleiben deine Häkchen erhalten.</p>
+    </div>
+  </section>
+
+  <!-- ===================== MAIN ===================== -->
+  <section id="main" style="display: none;">
+    <div class="topbar">
+      <div class="who">
+        <div class="num" id="tb-num">S</div>
+        <div><b id="tb-name">sascha</b><small id="tb-plan">Plan A · Basis</small></div>
+      </div>
+      <button class="num" style="font-size:16px;border-color:#3a3d30;color:var(--muted)" onclick="go(&#39;profil&#39;)" aria-label="Profil">≡</button>
+    </div>
+
+    <!-- VIEW: PLAN -->
+    <div class="view hidden" id="v-plan">
+      <div class="banner">
+        <div class="pitch grain">
+          <div class="row">
+            <div><div class="lbl">Fortschritt</div><div class="big"><span id="b-done">0</span><span>/32</span></div></div>
+            <div style="text-align:right"><div class="lbl">Plan</div><div class="display" id="b-plan" style="font-size:22px;color:#fff">Klassiker</div></div>
+          </div>
+          <div class="bar"><i id="b-bar" style="width: 0%;"></i></div>
+        </div>
+        <div class="bannerfoot"><span>Nächste Einheit: <b id="b-next">Tag 1 · Grundlagenausdauer</b></span><span id="b-pct" class="mono">0%</span></div>
+      </div>
+
+      <div class="section-h">Dein Plan</div>
+      <div class="choosebar" id="plan-chips"><button class="chip on" data-k="A">Plan A · Klassiker<small>Dauerlauf · Sprints · 400er</small></button><button class="chip" data-k="B">Plan B · Tempo &amp; Agilität<small>Fahrtspiel · Schwelle · Tabata</small></button><button class="chip" data-k="C">Plan C · Gelenkschoner<small>Sanft · Haltekraft · kurze Reize</small></button></div>
+      <div class="section-h">Dein Level</div>
+      <div class="choosebar" id="level-chips"><button class="chip on" data-i="0">Level 1<small>Basis</small></button><button class="chip" data-i="1">Level 2<small>Standard</small></button><button class="chip" data-i="2">Level 3<small>Athlet</small></button></div>
+
+      <div class="phase"><b>Block 1 &amp; 2</b> · Fundierung &amp; Protektion<span class="ln"></span><span class="mono">Tag 1–16</span></div>
+      <div class="grid" id="grid1"><button class="day lauf next"><span class="ic"></span><span class="dt">Grundlagenausdauer</span><span class="dn">Tag 1</span></button><button class="day kraft"><span class="ic"></span><span class="dt">Kraft</span><span class="dn">Tag 2</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 3</span></button><button class="day lauf"><span class="ic"></span><span class="dt">Intervall-Einstieg</span><span class="dn">Tag 4</span></button><button class="day kraft"><span class="ic"></span><span class="dt">Kraft</span><span class="dn">Tag 5</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 6</span></button><button class="day aktiv"><span class="ic"></span><span class="dt">Erholung</span><span class="dn">Tag 7</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 8</span></button><button class="day lauf"><span class="ic"></span><span class="dt">Grundlagenausdauer</span><span class="dn">Tag 9</span></button><button class="day kraft"><span class="ic"></span><span class="dt">Kraft</span><span class="dn">Tag 10</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 11</span></button><button class="day lauf"><span class="ic"></span><span class="dt">Intervall-Einstieg</span><span class="dn">Tag 12</span></button><button class="day kraft"><span class="ic"></span><span class="dt">Kraft</span><span class="dn">Tag 13</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 14</span></button><button class="day aktiv"><span class="ic"></span><span class="dt">Erholung</span><span class="dn">Tag 15</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 16</span></button></div>
+      <div class="phase"><b>Block 3 &amp; 4</b> · Mobilisierung &amp; Spezifizierung<span class="ln"></span><span class="mono">Tag 17–32</span></div>
+      <div class="grid" id="grid2"><button class="day lauf"><span class="ic"></span><span class="dt">Pendel-HIIT</span><span class="dn">Tag 17</span></button><button class="day kraft"><span class="ic"></span><span class="dt">Kraft</span><span class="dn">Tag 18</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 19</span></button><button class="day lauf"><span class="ic"></span><span class="dt">Shuttle Run</span><span class="dn">Tag 20</span></button><button class="day kraft"><span class="ic"></span><span class="dt">Kraft</span><span class="dn">Tag 21</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 22</span></button><button class="day aktiv"><span class="ic"></span><span class="dt">Erholung</span><span class="dn">Tag 23</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 24</span></button><button class="day lauf"><span class="ic"></span><span class="dt">Pendel-HIIT</span><span class="dn">Tag 25</span></button><button class="day kraft"><span class="ic"></span><span class="dt">Kraft</span><span class="dn">Tag 26</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 27</span></button><button class="day lauf"><span class="ic"></span><span class="dt">Shuttle Run</span><span class="dn">Tag 28</span></button><button class="day kraft"><span class="ic"></span><span class="dt">Kraft</span><span class="dn">Tag 29</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 30</span></button><button class="day aktiv"><span class="ic"></span><span class="dt">Erholung</span><span class="dn">Tag 31</span></button><button class="day pause"><span class="ic"></span><span class="dt">Pause</span><span class="dn">Tag 32</span></button></div>
+      <p class="note-soft" style="margin:18px 2px 0">Tipp: Tippe einen Tag an, um die Einheit zu sehen und abzuhaken. Die vielen Pausen sind Absicht — die Regeneration ist Teil des Plans.</p>
+    </div>
+
+    <!-- VIEW: ÜBUNGEN -->
+    <div class="view hidden" id="v-ueb">
+      <div class="section-h">Krafttraining · Zirkel A–F</div>
+      <p class="note-soft" style="margin:0 2px 16px">Die sechs Übungen sind in allen Plänen gleich — nur Wiederholungen, Tempo und Halten ändern sich je nach Tag &amp; Level.</p>
+      <div id="ex-list"><div class="ex">
+      <div class="h"><div class="badge">A</div><div><b>Kopenhagener Plan</b><small>Adduktoren · Schutz vor Leistenproblemen</small></div></div>
+      <div class="body">
+        <p><span class="k">Ausführung</span>Seitstütz einnehmen. Das obere Bein liegt auf einer Erhöhung (Stuhl/Bank), das untere Bein schwebt frei darunter oder wird herangezogen. Der Körper bildet eine gerade Linie.</p>
+        <p><span class="k">Häufiger Fehler</span><span class="bad">Hüfte knickt nach hinten weg.</span></p>
+        <a class="gl" href="https://www.google.com/search?tbm=isch&amp;q=Copenhagen%20plank%20with%20chair" target="_blank" rel="noopener">Übung googeln ↗</a>
+      </div></div><div class="ex">
+      <div class="h"><div class="badge">B</div><div><b>Ausfallschritte rückwärts</b><small>Knie-Schonung · großer Gesäßmuskel</small></div></div>
+      <div class="body">
+        <p><span class="k">Ausführung</span>Aufrechter Stand. Einen großen Schritt nach hinten machen und das hintere Knie kontrolliert Richtung Boden absenken. Das vordere Knie bleibt stabil über dem Sprunggelenk.</p>
+        <p><span class="k">Häufiger Fehler</span><span class="bad">Vorderes Knie fällt nach innen.</span></p>
+        <a class="gl" href="https://www.google.com/search?tbm=isch&amp;q=Reverse%20Lunges" target="_blank" rel="noopener">Übung googeln ↗</a>
+      </div></div><div class="ex">
+      <div class="h"><div class="badge">C</div><div><b>Liegestütze</b><small>Core- &amp; Oberkörperstabilität (Zweikämpfe)</small></div></div>
+      <div class="body">
+        <p><span class="k">Ausführung</span>Hände schulterbreit aufstellen. Der gesamte Körper bildet eine steife Brett-Linie. Kontrolliert absenken, bis die Nase fast den Boden berührt.</p>
+        <p><span class="k">Häufiger Fehler</span><span class="bad">Durchhängender Rücken (Hohlkreuz).</span></p>
+        <a class="gl" href="https://www.google.com/search?tbm=isch&amp;q=Push%20Up" target="_blank" rel="noopener">Übung googeln ↗</a>
+      </div></div><div class="ex">
+      <div class="h"><div class="badge">D</div><div><b>Einbeiniges Kreuzheben</b><small>Sehnen &amp; Bänder im Sprunggelenk</small></div></div>
+      <div class="body">
+        <p><span class="k">Ausführung</span>Auf einem Bein stehen. Mit geradem Rücken den Oberkörper nach vorne beugen, während das andere Bein gestreckt nach hinten wandert. Fingerspitzen Richtung Boden.</p>
+        <p><span class="k">Häufiger Fehler</span><span class="bad">Runder Rücken / Knie knickt ein.</span></p>
+        <a class="gl" href="https://www.google.com/search?tbm=isch&amp;q=Single-Leg%20Deadlift" target="_blank" rel="noopener">Übung googeln ↗</a>
+      </div></div><div class="ex">
+      <div class="h"><div class="badge">E</div><div><b>Einbeinige Glute Bridge</b><small>Hamstrings · Schutz vor Muskelfaserrissen</small></div></div>
+      <div class="body">
+        <p><span class="k">Ausführung</span>Auf den Rücken legen, Beine anwinkeln, ein Bein senkrecht in die Luft strecken. Das Gesäß über das Standbein kraftvoll nach oben drücken, bis Oberschenkel und Oberkörper eine Linie bilden.</p>
+        <p><span class="k">Häufiger Fehler</span><span class="bad">Hüfte verdreht sich beim Anheben.</span></p>
+        <a class="gl" href="https://www.google.com/search?tbm=isch&amp;q=single%20leg%20glute%20bridge" target="_blank" rel="noopener">Übung googeln ↗</a>
+      </div></div><div class="ex">
+      <div class="h"><div class="badge">F</div><div><b>Dead Bug</b><small>Stabilität der Lendenwirbelsäule</small></div></div>
+      <div class="body">
+        <p><span class="k">Ausführung</span>Auf dem Rücken, Arme senkrecht nach oben, Beine im 90-Grad-Winkel. Abwechselnd linken Arm und rechtes Bein (und umgekehrt) kontrolliert Richtung Boden strecken, unteren Rücken fest in den Boden pressen.</p>
+        <p><span class="k">Häufiger Fehler</span><span class="bad">Hohlkreuz — der untere Rücken muss immer aufliegen.</span></p>
+        <a class="gl" href="https://www.google.com/search?tbm=isch&amp;q=Dead%20Bug%20exercise" target="_blank" rel="noopener">Übung googeln ↗</a>
+      </div></div></div>
+    </div>
+
+    <!-- VIEW: PROFIL -->
+    <div class="view" id="v-profil">
+      <div class="section-h">Profil</div>
+      <div class="card">
+        <h3>Konto</h3>
+        <div class="kv"><b>Benutzername</b><span id="pf-user">sascha</span></div>
+        <div class="kv"><b>Plan</b><span id="pf-plan">Plan A · Klassiker</span></div>
+        <div class="kv"><b>Level</b><span id="pf-level">Level 1 · Basis</span></div>
+        <div class="kv"><b>Erledigt</b><span id="pf-prog">0 / 32</span></div>
+      </div>
+      <div class="card">
+        <h3>Aktionen</h3>
+        <button class="btn-line" onclick="resetProgress()">Fortschritt zurücksetzen</button>
+        <button class="btn-line warn" onclick="doLogout()">Abmelden</button>
+        <p class="note-soft">Rangliste folgt evtl. später — dann sieht man, wer welchen Plan fährt und wie weit alle sind.</p>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button id="n-plan" class="" onclick="go(&#39;plan&#39;)"><span class="ico">▦</span>Plan</button>
+      <button id="n-ueb" onclick="go(&#39;ueb&#39;)"><span class="ico">▣</span>Übungen</button>
+      <button id="n-profil" onclick="go(&#39;profil&#39;)" class="on"><span class="ico">●</span>Profil</button>
+    </nav>
+  </section>
+
+  <!-- modal + toast -->
+  <div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+    <div class="sheet" id="sheet"></div>
+  </div>
+  <div class="toast" id="toast"></div>
+</div>
+
+<script>
+/* ============ storage (localStorage + in-memory fallback) ============ */
+const Store={
+  mem:{},
+  ok:(()=>{try{localStorage.setItem('__t','1');localStorage.removeItem('__t');return true}catch(e){return false}})(),
+  get(k){if(this.ok){try{return localStorage.getItem(k)}catch(e){}}return (k in this.mem)?this.mem[k]:null},
+  set(k,v){if(this.ok){try{localStorage.setItem(k,v);return}catch(e){}}this.mem[k]=v},
+};
+const K_ACC='tsv_accounts', K_SES='tsv_session';
+const TEAM_PIN='1924';
+const loadAcc=()=>{try{return JSON.parse(Store.get(K_ACC))||{}}catch(e){return{}}};
+const saveAcc=a=>Store.set(K_ACC,JSON.stringify(a));
+
+/* ============ PLAN DATA ============ */
+const LEVELS=["Basis","Standard","Athlet"];
+const SHORT={lauf:"Lauf",kraft:"Kraft",aktiv:"Erholung",pause:"Pause"};
+const PLANS={
+ A:{name:"Klassiker",tag:"Dauerlauf · Sprints · 400er",
+  p1:[
+   {t:"lauf",ti:"Grundlagenausdauer",L:["30 Min. lockerer Dauerlauf","45 Min. lockerer Dauerlauf","60 Min. lockerer Dauerlauf"],n:"Moderates Tempo halten."},
+   {t:"kraft",ti:"Kraft · Rumpf & Beine",L:["Zirkel A–F: 2 Durchgänge, je 10 saubere Wdh.","Zirkel A–F: 3 Durchgänge, je 12 saubere Wdh.","Zirkel A–F: 4 Durchgänge, je 15 saubere Wdh."],n:"Kontrolliertes Tempo."},
+   {t:"pause",ti:"Pause",n:"Absolute Muskelregeneration."},
+   {t:"lauf",ti:"Intervall-Einstieg",L:["15 Min. ein / 5× 1 Min. Sprint (80%) + 1 Min. Gehen / 5 Min. aus","15 Min. ein / 8× 1 Min. Sprint (80%) + 1 Min. Gehen / 5 Min. aus","15 Min. ein / 12× 1 Min. Sprint (80%) + 1 Min. Gehen / 5 Min. aus"],n:"Tempo bei den Intervallen kontrollieren."},
+   {t:"kraft",ti:"Kraft · Rumpf & Beine",L:["Zirkel A–F: 2 Durchgänge, je 10 saubere Wdh.","Zirkel A–F: 3 Durchgänge, je 12 saubere Wdh.","Zirkel A–F: 4 Durchgänge, je 15 saubere Wdh."],n:"Wiederholung von Tag 2."},
+   {t:"pause",ti:"Pause",n:"Erholung für Sehnen und Nerven."},
+   {t:"aktiv",ti:"Aktive Erholung",L:["30 Min. Spaziergang oder Stretching","30 Min. Spaziergang oder Stretching","30 Min. Spaziergang oder Stretching"],n:"Kein Laufen / kein Krafttraining."},
+   {t:"pause",ti:"Pause",n:"Tanks voll aufladen."}],
+  p2:[
+   {t:"lauf",ti:"Pendel-HIIT",L:["2 Sätze à 5 Min. (30s Sprint / 30s Trab)","3 Sätze à 6 Min. (30s Sprint / 30s Trab)","4 Sätze à 6 Min. (30s Sprint / 30s Trab)"],n:"15 m Pendelläufe mit Richtungswechsel."},
+   {t:"kraft",ti:"Kraft · Explosivkraft",L:["Zirkel A–F: 3 Durchg., je 12 Wdh. · Übung B gesprungen","Zirkel A–F: 3 Durchg., je 15 Wdh. · Übung B gesprungen","Zirkel A–F: 4 Durchg., je 20 Wdh. · Übung B gesprungen"],n:"Maximal dynamisch nach oben drücken."},
+   {t:"pause",ti:"Pause",n:"Superkompensation einleiten."},
+   {t:"lauf",ti:"Shuttle Run",L:["3× 400 m auf Zeit (2 Min. Gehpause)","5× 400 m auf Zeit (90s Gehpause)","6× 400 m auf Zeit (60s Gehpause)"],n:"Belastungstest auf Platz oder Wiese."},
+   {t:"kraft",ti:"Kraft · Explosivkraft",L:["Zirkel A–F: 3 Durchg., je 12 Wdh. · Übung B gesprungen","Zirkel A–F: 3 Durchg., je 15 Wdh. · Übung B gesprungen","Zirkel A–F: 4 Durchg., je 20 Wdh. · Übung B gesprungen"],n:"Wiederholung von Tag 18."},
+   {t:"pause",ti:"Pause",n:"Überlastungsschäden vermeiden."},
+   {t:"aktiv",ti:"Aktive Erholung",L:["30 Min. Spaziergang oder Blackroll","30 Min. Spaziergang oder Blackroll","30 Min. Spaziergang oder Blackroll"],n:"Faszien lockern."},
+   {t:"pause",ti:"Pause",n:"Frisch machen für den Vorbereitungsstart."}]},
+ B:{name:"Tempo & Agilität",tag:"Fahrtspiel · Schwelle · Tabata",
+  p1:[
+   {t:"lauf",ti:"Fahrtspiel",L:["30 Min. (alle 3 Min. 30s Tempo anziehen)","40 Min. (alle 3 Min. 45s Tempo anziehen)","50 Min. (alle 2 Min. 45s Tempo anziehen)"],n:"Wechselndes Tempo nach Gefühl."},
+   {t:"kraft",ti:"Kraft · Exzentrik",L:["Zirkel A–F: 3 Durchg., je 10 Wdh. · B/C/D 3s langsam abwärts","Zirkel A–F: 3 Durchg., je 12 Wdh. · B/C/D 4s langsam abwärts","Zirkel A–F: 4 Durchg., je 12 Wdh. · B/C/D 5s langsam abwärts"],n:"Langsame Bewegung schützt die Sehnen."},
+   {t:"pause",ti:"Pause",n:"Absolute Muskelregeneration."},
+   {t:"lauf",ti:"Schwellenlauf",L:["20 Min. zügiges Tempo durchziehen","30 Min. zügiges Tempo durchziehen","40 Min. zügiges Tempo durchziehen"],n:"Schnell, aber kein Vollsprint."},
+   {t:"kraft",ti:"Kraft · Exzentrik",L:["Zirkel A–F: 3 Durchg., je 10 Wdh. · B/C/D 3s langsam abwärts","Zirkel A–F: 3 Durchg., je 12 Wdh. · B/C/D 4s langsam abwärts","Zirkel A–F: 4 Durchg., je 12 Wdh. · B/C/D 5s langsam abwärts"],n:"Wiederholung von Tag 2."},
+   {t:"pause",ti:"Pause",n:"Erholung für Sehnen und Nerven."},
+   {t:"aktiv",ti:"Aktive Erholung",L:["30 Min. Spaziergang oder Stretching","30 Min. Spaziergang oder Stretching","30 Min. Spaziergang oder Stretching"],n:"Kein Laufen / kein Krafttraining."},
+   {t:"pause",ti:"Pause",n:"Tanks voll aufladen."}],
+  p2:[
+   {t:"lauf",ti:"Tabata-HIIT",L:["1 Tabata-Block (4 Min: 8× 20s Sprint / 10s Pause)","2 Tabata-Blöcke (8 Min / 3 Min Serienpause)","3 Tabata-Blöcke (12 Min / 2 Min Serienpause)"],n:"Maximale Sauerstoffaufnahme pushen."},
+   {t:"kraft",ti:"Kraft · Zeit-Stabilität",L:["Zirkel A–F: 3 Durchg., je 40s halten/bewegen · 30s Pause","Zirkel A–F: 3 Durchg., je 50s halten/bewegen · 30s Pause","Zirkel A–F: 4 Durchg., je 60s halten/bewegen · 30s Pause"],n:"Halte- und Kraftausdauer."},
+   {t:"pause",ti:"Pause",n:"Superkompensation einleiten."},
+   {t:"lauf",ti:"Agilität",L:["15 Min. ein / 6× Richtungswechsellauf 30 m / aus","15 Min. ein / 10× Richtungswechsellauf 30 m / aus","15 Min. ein / 14× Richtungswechsellauf 30 m / aus"],n:"Slalom und Wenden auf der Wiese simulieren."},
+   {t:"kraft",ti:"Kraft · Zeit-Stabilität",L:["Zirkel A–F: 3 Durchg., je 40s halten/bewegen · 30s Pause","Zirkel A–F: 3 Durchg., je 50s halten/bewegen · 30s Pause","Zirkel A–F: 4 Durchg., je 60s halten/bewegen · 30s Pause"],n:"Wiederholung von Tag 18."},
+   {t:"pause",ti:"Pause",n:"Überlastungsschäden vermeiden."},
+   {t:"aktiv",ti:"Aktive Erholung",L:["30 Min. Spaziergang oder Blackroll","30 Min. Spaziergang oder Blackroll","30 Min. Spaziergang oder Blackroll"],n:"Faszien und Muskeln lockern."},
+   {t:"pause",ti:"Pause",n:"Frisch machen für den Vorbereitungsstart."}]},
+ C:{name:"Gelenkschoner",tag:"Sanft · Haltekraft · kurze Reize",
+  p1:[
+   {t:"lauf",ti:"Cardio Gelenkschutz",L:["25 Min. entspanntes Traben","35 Min. entspanntes Traben","45 Min. zügiges Traben"],n:"Weicher Untergrund (Waldboden) empfohlen."},
+   {t:"kraft",ti:"Kraft · Haltekraft",L:["2 Durchg. · dyn. 10 Wdh. · statisch A/C/F 30s halten","3 Durchg. · dyn. 12 Wdh. · statisch A/C/F 45s halten","4 Durchg. · dyn. 15 Wdh. · statisch A/C/F 60s halten"],n:"Zirkel A–F."},
+   {t:"pause",ti:"Pause",n:"Absolute Gelenks- und Muskelregeneration."},
+   {t:"lauf",ti:"Steigerungen",L:["20 Min. Lauf (darin 4× 60 m Steigerung)","30 Min. Lauf (darin 6× 60 m Steigerung)","40 Min. Lauf (darin 8× 60 m Steigerung)"],n:"Sanfter Übergang zu schnellen Fasern."},
+   {t:"kraft",ti:"Kraft · Haltekraft",L:["2 Durchg. · dyn. 10 Wdh. · statisch A/C/F 30s halten","3 Durchg. · dyn. 12 Wdh. · statisch A/C/F 45s halten","4 Durchg. · dyn. 15 Wdh. · statisch A/C/F 60s halten"],n:"Wiederholung von Tag 2."},
+   {t:"pause",ti:"Pause",n:"Erholung für den passiven Apparat."},
+   {t:"aktiv",ti:"Aktive Erholung",L:["30 Min. Spaziergang oder Stretching","30 Min. Spaziergang oder Stretching","30 Min. Spaziergang oder Stretching"],n:"Kein Laufen / kein Krafttraining."},
+   {t:"pause",ti:"Pause",n:"Körper erholt sich voll auf."}],
+  p2:[
+   {t:"lauf",ti:"Short-Short",L:["15 Min. ein / 10× (15s Sprint / 15s Gehen) / aus","15 Min. ein / 15× (15s Sprint / 15s Gehen) / aus","15 Min. ein / 20× (15s Sprint / 15s Gehen) / aus"],n:"Kurze Belastung schont die Gelenke."},
+   {t:"kraft",ti:"Kraft · Mobilität",L:["Zirkel A–F: 3 Durchg., je 12 saubere Wdh.","Zirkel A–F: 3 Durchg., je 18 saubere Wdh.","Zirkel A–F: 4 Durchg., je 20 saubere Wdh."],n:"Volle Bewegungsamplitude nutzen."},
+   {t:"pause",ti:"Pause",n:"Superkompensation abwarten."},
+   {t:"lauf",ti:"Tempowechsel",L:["20 Min. (jede Min. 15s Tempo verdoppeln)","25 Min. (jede Min. 15s Tempo verdoppeln)","30 Min. (jede Min. 20s Tempo verdoppeln)"],n:"Spritzigkeit erhalten."},
+   {t:"kraft",ti:"Kraft · Mobilität",L:["Zirkel A–F: 3 Durchg., je 12 saubere Wdh.","Zirkel A–F: 3 Durchg., je 18 saubere Wdh.","Zirkel A–F: 4 Durchg., je 20 saubere Wdh."],n:"Wiederholung von Tag 18."},
+   {t:"pause",ti:"Pause",n:"Schutz vor Ermüdungserscheinungen."},
+   {t:"aktiv",ti:"Aktive Erholung",L:["30 Min. ausgiebiges Dehnen oder Yoga","30 Min. ausgiebiges Dehnen oder Yoga","30 Min. ausgiebiges Dehnen oder Yoga"],n:"Regeneration forcieren."},
+   {t:"pause",ti:"Pause",n:"Bereit für den harten ersten Vorbereitungstag!"}]}
+};
+const EXERCISES=[
+ {id:"A",name:"Kopenhagener Plan",focus:"Adduktoren · Schutz vor Leistenproblemen",
+  how:"Seitstütz einnehmen. Das obere Bein liegt auf einer Erhöhung (Stuhl/Bank), das untere Bein schwebt frei darunter oder wird herangezogen. Der Körper bildet eine gerade Linie.",
+  bad:"Hüfte knickt nach hinten weg.",g:"Copenhagen plank with chair"},
+ {id:"B",name:"Ausfallschritte rückwärts",focus:"Knie-Schonung · großer Gesäßmuskel",
+  how:"Aufrechter Stand. Einen großen Schritt nach hinten machen und das hintere Knie kontrolliert Richtung Boden absenken. Das vordere Knie bleibt stabil über dem Sprunggelenk.",
+  bad:"Vorderes Knie fällt nach innen.",g:"Reverse Lunges"},
+ {id:"C",name:"Liegestütze",focus:"Core- & Oberkörperstabilität (Zweikämpfe)",
+  how:"Hände schulterbreit aufstellen. Der gesamte Körper bildet eine steife Brett-Linie. Kontrolliert absenken, bis die Nase fast den Boden berührt.",
+  bad:"Durchhängender Rücken (Hohlkreuz).",g:"Push Up"},
+ {id:"D",name:"Einbeiniges Kreuzheben",focus:"Sehnen & Bänder im Sprunggelenk",
+  how:"Auf einem Bein stehen. Mit geradem Rücken den Oberkörper nach vorne beugen, während das andere Bein gestreckt nach hinten wandert. Fingerspitzen Richtung Boden.",
+  bad:"Runder Rücken / Knie knickt ein.",g:"Single-Leg Deadlift"},
+ {id:"E",name:"Einbeinige Glute Bridge",focus:"Hamstrings · Schutz vor Muskelfaserrissen",
+  how:"Auf den Rücken legen, Beine anwinkeln, ein Bein senkrecht in die Luft strecken. Das Gesäß über das Standbein kraftvoll nach oben drücken, bis Oberschenkel und Oberkörper eine Linie bilden.",
+  bad:"Hüfte verdreht sich beim Anheben.",g:"single leg glute bridge"},
+ {id:"F",name:"Dead Bug",focus:"Stabilität der Lendenwirbelsäule",
+  how:"Auf dem Rücken, Arme senkrecht nach oben, Beine im 90-Grad-Winkel. Abwechselnd linken Arm und rechtes Bein (und umgekehrt) kontrolliert Richtung Boden strecken, unteren Rücken fest in den Boden pressen.",
+  bad:"Hohlkreuz — der untere Rücken muss immer aufliegen.",g:"Dead Bug exercise"}
+];
+
+/* day n (1..32) -> {phase, idx, entry} */
+function dayInfo(plan,n){
+  const inP2=n>16; const base=inP2?n-16:n; const idx=(base-1)%8;
+  const arr=inP2?PLANS[plan].p2:PLANS[plan].p1;
+  return {entry:arr[idx], idx};
+}
+
+/* ============ session state ============ */
+let CUR=null; // current account object (live ref into accounts map)
+let CURNAME=null;
+
+function $(id){return document.getElementById(id)}
+function toast(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),1600)}
+
+/* ============ AUTH UI ============ */
+function doLogin(){
+  const u=$('li-user').value.trim().toLowerCase();
+  const pin=$('li-pin').value.trim();
+  const e=$('auth-err'); e.textContent='';
+  if(!u||/\s/.test(u)) return e.textContent='Benutzername darf nicht leer sein, keine Leerzeichen.';
+  if(pin!==TEAM_PIN) return e.textContent='Falsche Team-PIN. Frag den Trainer.';
+  const acc=loadAcc();
+  if(!acc[u]) acc[u]={user:u,plan:null,level:0,checked:{},created:Date.now()};
+  saveAcc(acc); Store.set(K_SES,u); enter(u);
+}
+function doLogout(){
+  Store.set(K_SES,''); CUR=null; CURNAME=null;
+  $('main').style.display='none'; $('auth').classList.remove('hidden');
+  $('li-pin').value=''; $('auth-err').textContent=''; window.scrollTo(0,0);
+}
+
+/* ============ ENTER APP ============ */
+function enter(u){
+  const acc=loadAcc(); CUR=acc[u]; CURNAME=u;
+  $('auth').classList.add('hidden'); $('main').style.display='flex';
+  buildChips(); renderExercises(); go('plan'); refresh();
+  window.scrollTo(0,0);
+}
+function persist(){const acc=loadAcc();acc[CURNAME]=CUR;saveAcc(acc)}
+
+/* ============ CHIPS ============ */
+function buildChips(){
+  const pc=$('plan-chips'); pc.innerHTML='';
+  Object.keys(PLANS).forEach(k=>{
+    const b=document.createElement('button');b.className='chip';
+    b.innerHTML=`Plan ${k} · ${PLANS[k].name}<small>${PLANS[k].tag}</small>`;
+    b.onclick=()=>{CUR.plan=k;persist();refresh();toast('Plan '+k+' gewählt')};
+    b.dataset.k=k; pc.appendChild(b);
+  });
+  const lc=$('level-chips'); lc.innerHTML='';
+  LEVELS.forEach((nm,i)=>{
+    const b=document.createElement('button');b.className='chip';
+    b.innerHTML=`Level ${i+1}<small>${nm}</small>`;
+    b.onclick=()=>{CUR.level=i;persist();refresh();toast(nm+' gewählt')};
+    b.dataset.i=i; lc.appendChild(b);
+  });
+}
+
+/* ============ RENDER ============ */
+function refresh(){
+  const p=CUR.plan, lv=CUR.level;
+  // chips state
+  [...$('plan-chips').children].forEach(b=>b.classList.toggle('on',b.dataset.k===p));
+  [...$('level-chips').children].forEach(b=>b.classList.toggle('on',+b.dataset.i===lv));
+  // topbar
+  $('tb-name').textContent=CUR.user;
+  $('tb-num').textContent=(CUR.user[0]||'?').toUpperCase();
+  $('tb-plan').textContent=p?('Plan '+p+' · '+LEVELS[lv]):'kein Plan';
+  // banner
+  const done=Object.values(CUR.checked).filter(Boolean).length;
+  const pct=Math.round(done/32*100);
+  $('b-done').textContent=done; $('b-bar').style.width=pct+'%'; $('b-pct').textContent=pct+'%';
+  $('b-plan').textContent=p?PLANS[p].name:'—';
+  // next open day
+  let nextN=null;for(let n=1;n<=32;n++){if(!CUR.checked[n]){nextN=n;break}}
+  if(!p){$('b-next').textContent='erst Plan wählen';}
+  else if(nextN===null){$('b-next').textContent='alles erledigt! 🏁';}
+  else{const di=dayInfo(p,nextN);$('b-next').textContent='Tag '+nextN+' · '+di.entry.ti;}
+  // grids
+  buildGrid($('grid1'),1,16,p,nextN);
+  buildGrid($('grid2'),17,32,p,nextN);
+  // profile mirror
+  $('pf-user').textContent=CUR.user; $('pf-plan').textContent=p?('Plan '+p+' · '+PLANS[p].name):'—';
+  $('pf-level').textContent='Level '+(lv+1)+' · '+LEVELS[lv]; $('pf-prog').textContent=done+' / 32';
+}
+function buildGrid(el,from,to,plan,nextN){
+  el.innerHTML='';
+  for(let n=from;n<=to;n++){
+    const di=plan?dayInfo(plan,n):{entry:{t:'pause',ti:'—'}};
+    const e=di.entry; const done=!!CUR.checked[n];
+    const b=document.createElement('button');
+    b.className='day '+e.t+(done?' done':'')+(n===nextN&&plan?' next':'');
+    const label=done?'Erledigt':(e.t==='pause'?'Pause':e.t==='kraft'?'Kraft':e.t==='aktiv'?'Erholung':e.ti);
+    b.innerHTML=`<span class="ic">${done?'✓':''}</span><span class="dt">${plan?label:'—'}</span><span class="dn">Tag ${n}</span>`;
+    b.onclick=()=>openDay(n);
+    el.appendChild(b);
+  }
+}
+
+/* ============ DAY MODAL ============ */
+let MDAY=null;
+function openDay(n){
+  if(!CUR.plan){toast('Wähle zuerst einen Plan');return}
+  MDAY=n; const di=dayInfo(CUR.plan,n); const e=di.entry; const done=!!CUR.checked[n];
+  const isRest=(e.t==='pause');
+  const work=isRest?'Keine Einheiten — Regeneration ist Teil des Plans.':e.L[CUR.level];
+  $('sheet').innerHTML=`
+    <span class="tag">TAG ${String(n).padStart(2,'0')} / 32 · ${SHORT[e.t].toUpperCase()}</span>
+    <h2>${e.ti}</h2>
+    <div class="meta">Plan ${CUR.plan} · ${PLANS[CUR.plan].name} — Level ${CUR.level+1} · ${LEVELS[CUR.level]}</div>
+    <div class="work">${work}</div>
+    <div class="hint"><b>Hinweis</b>${e.n}</div>
+    <div class="acts">
+      <button class="check ${done?'undo':''}" onclick="toggleDay(${n})">${done?'Häkchen entfernen':'Erledigt ✓'}</button>
+      <button class="close" onclick="closeModal()">Schließen</button>
+    </div>`;
+  $('modal').classList.add('show');
+}
+function toggleDay(n){
+  CUR.checked[n]=!CUR.checked[n]; if(!CUR.checked[n])delete CUR.checked[n];
+  persist(); refresh(); closeModal();
+  toast(CUR.checked[n]?'Tag '+n+' abgehakt 💪':'Häkchen entfernt');
+}
+function closeModal(){$('modal').classList.remove('show');MDAY=null}
+
+/* ============ EXERCISES ============ */
+function renderExercises(){
+  const el=$('ex-list'); el.innerHTML='';
+  EXERCISES.forEach(x=>{
+    const d=document.createElement('div');d.className='ex';
+    d.innerHTML=`
+      <div class="h"><div class="badge">${x.id}</div><div><b>${x.name}</b><small>${x.focus}</small></div></div>
+      <div class="body">
+        <p><span class="k">Ausführung</span>${x.how}</p>
+        <p><span class="k">Häufiger Fehler</span><span class="bad">${x.bad}</span></p>
+        <a class="gl" href="https://www.google.com/search?tbm=isch&q=${encodeURIComponent(x.g)}" target="_blank" rel="noopener">Übung googeln ↗</a>
+      </div>`;
+    el.appendChild(d);
+  });
+}
+
+/* ============ PROFILE ============ */
+function resetProgress(){
+  if(!confirm('Wirklich den gesamten Fortschritt zurücksetzen?'))return;
+  CUR.checked={}; persist(); refresh(); toast('Fortschritt zurückgesetzt');
+}
+
+/* ============ NAV ============ */
+function go(v){
+  ['plan','ueb','profil'].forEach(x=>{
+    $('v-'+x).classList.toggle('hidden',x!==v);
+    $('n-'+x).classList.toggle('on',x!==v?false:true);
+  });
+  window.scrollTo(0,0);
+}
+
+/* ============ BOOT ============ */
+(function boot(){
+  const ses=Store.get(K_SES); const acc=loadAcc();
+  if(ses&&acc[ses]) enter(ses); else {$('main').style.display='none';}
+  if(!Store.ok){
+    $('auth-err').textContent='Hinweis: Speicher ist hier blockiert (z. B. Vorschau) — Daten halten nur für diese Sitzung. Auf der gehosteten Seite bleiben sie erhalten.';
+  }
+})();
+</script>
+
+
+</body></html>
